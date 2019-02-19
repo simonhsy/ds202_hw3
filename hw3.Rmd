@@ -1,0 +1,53 @@
+---
+title: "hw3"
+author: "Hongsheng Yin"
+date: "February 19, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+data(tips, package="reshape2")
+
+numParty <- nrow(unique(tips))
+numParty # parties the waiter serve
+
+str(tips) #types of variables in the data frame tips
+
+day <- tips$day #the day of visits in tips
+levels(day) <- c('Thur', 'Fri', 'Sat', 'Sun') #The factor levels should be ordered from Thursday to Sunday
+day <- factor(day, levels = c('Thur', 'Fri', 'Sat', 'Sun'))
+day
+
+female5 <- tips[(tips$sex =="Female" & tips$size >= 5),] #meal paid by a female payer in a party with size greater than or euqal to 5
+female5
+
+ggplot(tips, aes(x=total_bill, y=tip)) + 
+  geom_point()
+```
+The relationship is the more total bill the more tip will be. 
+
+```{r}
+tiprate <- tips$tip/tips$total_bill
+mean(tiprate) #Get the average tiprate
+
+tips$time <- factor(tips$time, levels = c('Lunch', 'Dinner'))
+ggplot(tips, aes(x=time, y=tiprate)) + 
+  geom_boxplot()
+
+ggplot(tips, aes(x=total_bill, y=tip)) + 
+  geom_point() + 
+  facet_grid(smoker~sex)
+
+tips$day <- factor(tips$day, levels = c('Thur', 'Fri', 'Sat', 'Sun'))
+ggplot(tips, aes(x=total_bill, y=tip)) +
+  geom_point()+
+  facet_grid(sex ~ day)
+ggplot(tips, aes(x=day, fill= sex)) +
+  geom_bar()
+```
+From the bar plot, we can see that male are paying more times than women, especially in weekends.
